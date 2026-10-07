@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>EcoTrack</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap">
+  <style>
+    /* Design System: Modern civic-tech platform for waste management
+       Light & clean with green/teal accents, dashboard-focused typography */
+
+    :root {
+      /* Color Palette */
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-light: #d1fae5;
+      --secondary: #0ea5e9;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-tertiary: #f3f4f6;
+      --border: #e5e7eb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --text-tertiary: #9ca3af;
+
+      /* Typography */
+      --font-display: 'Playfair Display', serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'Courier New', monospace;
+
+      /* Spacing & Sizing */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #10b981;
+        --primary-light: #064e3b;
+        --secondary: #0ea5e9;
+        --accent: #fbbf24;
+
+        --bg-primary: #111827;
+        --bg-secondary: #1f2937;
+        --bg-tertiary: #2d3748;
+        --border: #374151;
+        --text-primary: #f9fafb;
+        --text-secondary: #d1d5db;
+        --text-tertiary: #9ca3af;
+
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --primary: #10b981;
+      --primary-light: #064e3b;
+      --secondary: #0ea5e9;
+      --accent: #fbbf24;
+
+      --bg-primary: #111827;
+      --bg-secondary: #1f2937;
+      --bg-tertiary: #2d3748;
+      --border: #374151;
+      --text-primary: #f9fafb;
+      --text-secondary: #d1d5db;
+      --text-tertiary: #9ca3af;
+
+      color-scheme: dark;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 0 16px;
+    }
+
+    /* Typography */
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      text-wrap: balance;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      text-wrap: balance;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: var(--primary-dark);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-lg);
+      border: none;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Layout Containers */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section {
+      padding: 6rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .section {
+        padding: 3rem 0;
+      }
+    }
+
+    /* Header/Navigation */
+    header {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: env(safe-area-inset-top, 0);
+      background: var(--bg-primary);
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        display: none;
+      }
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 4rem 0 6rem 0;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%);
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .hero-text h1 {
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-description {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .hero-dashboard {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-header {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #fbbf24; }
+    .dot-green { background: #10b981; }
+
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .hero-dashboard {
+        min-height: 250px;
+      }
+    }
+
+    /* Form Styles */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    .form-input {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-input.error {
+      border-color: var(--danger);
+    }
+
+    .error-message {
+      color: var(--danger);
+      font-size: 0.875rem;
+    }
+
+    .success-message {
+      color: var(--success);
+      font-size: 0.875rem;
+      padding: 1rem;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Card Layouts */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .card h3 {
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-light);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    /* Section: Problem Statement */
+    .problem-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .problem-card {
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--danger);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+    }
+
+    .problem-card h3 {
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    /* Section: Features */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .feature-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(16, 185, 129, 0.1);
+      border-color: var(--primary);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, rgba(14, 165, 233, 0.1) 100%);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.75rem;
+    }
+
+    .feature-card h3 {
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-link {
+      color: var(--primary);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    /* Section: Process/Workflow */
+    .process-timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .process-step {
+      position: relative;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+    }
+
+    .step-number {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .step-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Section: How It Works */
+    .how-it-works {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .how-step {
+      text-align: center;
+    }
+
+    .how-step-number {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .how-step h3 {
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    /* Section: Waste Segregation */
+    .waste-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .waste-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid var(--border);
+    }
+
+    .waste-category-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .waste-card.wet .waste-category-badge {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .waste-card.dry .waste-category-badge {
+      background: #dbeafe;
+      color: #0c4a6e;
+    }
+
+    .waste-card.hazard .waste-category-badge {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    .waste-items {
+      list-style: none;
+      margin-top: 1.5rem;
+    }
+
+    .waste-items li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .waste-items li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    /* Section: Dashboard Showcase */
+    .dashboard-showcase {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .dashboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .dashboard-table thead {
+      background: var(--bg-tertiary);
+    }
+
+    .dashboard-table th,
+    .dashboard-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dashboard-table th {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .dashboard-table td {
+      color: var(--text-secondary);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-assigned { background: #dbeafe; color: #0c4a6e; }
+    .status-resolved { background: #dcfce7; color: #15803d; }
+
+    /* Section: Audience Dashboards */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .audience-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .audience-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(16, 185, 129, 0.1);
+    }
+
+    .audience-header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+    }
+
+    .audience-header h3 {
+      margin: 0;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+
+    .audience-body {
+      padding: 1.5rem;
+    }
+
+    .audience-feature {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+
+    .audience-feature-icon {
+      width: 20px;
+      height: 20px;
+      background: var(--primary-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+      margin-top: 6rem;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h4 {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section li {
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-section a {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .footer-section a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: var(--text-tertiary);
+      font-size: 0.9rem;
+    }
+
+    /* Trust Metrics */
+    .trust-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      background: var(--bg-secondary);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    .metric {
+      text-align: center;
+    }
+
+    .metric-value {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Loading State */
+    .loading {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Utility Classes */
+    .text-center {
+      text-align: center;
+    }
+
+    .text-muted {
+      color: var(--text-tertiary);
+    }
+
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mt-4 { margin-top: 2rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mb-4 { margin-bottom: 2rem; }
+
+    .gap-1 { gap: 0.5rem; }
+    .gap-2 { gap: 1rem; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .dashboard-table {
+        font-size: 0.8rem;
+      }
+
+      .dashboard-table th,
+      .dashboard-table td {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Navigation -->
+  <header>
+    <div class="header-content">
+      <div class="logo">EcoTrack</div>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#waste-guide">Waste Guide</a>
+        <a href="#report">Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-tagline">Smart Waste Management</div>
+          <h1>Smarter waste. Cleaner communities.</h1>
+          <p class="hero-description">
+            Turn citizen reports into coordinated action. EcoTrack connects sanitation teams, administrators, and communities in real-time to tackle waste challenges with transparency and accountability.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="scrollToReport()">Report an Issue</button>
+            <button class="btn btn-secondary">Explore Features</button>
+          </div>
+        </div>
+
+        <div class="hero-dashboard">
+          <div class="dashboard-header">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+          </div>
+          <div style="text-align: center; margin-top: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+            <p>Live incident tracking & spatial intelligence</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust/Impact Metrics -->
+  <section class="section">
+    <div class="container">
+      <div class="trust-metrics">
+        <div class="metric">
+          <div class="metric-value">2,847</div>
+          <div class="metric-label">Reports Resolved</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">96%</div>
+          <div class="metric-label">Satisfaction Rate</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">2.3 hrs</div>
+          <div class="metric-label">Avg Response Time</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value">14</div>
+          <div class="metric-label">Municipal Partners</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Statement -->
+  <section class="section">
+    <div class="container">
+      <div style="max-width: 600px;">
+        <div style="color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 1rem;">THE PROBLEM</div>
+        <h2>The problem is bigger than a single full bin.</h2>
+        <p style="font-size: 1.1rem; margin-top: 1.5rem;">
+          Every day, city streets face a breakdown in the sanitation chain. Waste is tossed without segregation, communal bins overflow unnoticed for days, and local sanitation departments struggle with manual reporting paths that lead nowhere.
+        </p>
+      </div>
+
+      <div class="problem-cards">
+        <div class="problem-card">
+          <h3>🗑️ Mixed Waste</h3>
+          <p>Dry recyclables contaminated with organic wet waste reduce recycling facility yield to under 20% and trigger toxic landfill buildup.</p>
+        </div>
+        <div class="problem-card">
+          <h3>📍 Missed Collection</h3>
+          <p>Static truck schedules leave peripheral sectors unattended while quiet neighborhoods receive repetitive unnecessary passes.</p>
+        </div>
+        <div class="problem-card">
+          <h3>⏱️ Slow Response</h3>
+          <p>Citizens submit complaints through buried phone helplines, leading to 7-day latency intervals before a cleanup squad is dispatched.</p>
+        </div>
+        <div class="problem-card">
+          <h3>👁️ No Visibility</h3>
+          <p>Lack of photographic proof and GPS tracking means municipalities have zero verifiable feedback on resolution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 1rem;">POWERFUL CAPABILITIES</div>
+        <h2>Built for real-world sanitation challenges.</h2>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Report an Issue</h3>
+          <p>Instant incident intake. Take a photo, tag severity, add contextual notes, and submit without sign-up friction.</p>
+          <a href="#report" class="feature-link">Start Reporting →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📖</div>
+          <h3>Smart Waste Guide</h3>
+          <p>A comprehensive directory of municipal disposal regulations. Search any object to find wet, dry, or hazardous sorting instructions.</p>
+          <a href="#waste-guide" class="feature-link">Explore Guide →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Track Your Report</h3>
+          <p>Enter your incident token to inspect real-time progress, assigned personnel, ETA, and resolution status.</p>
+          <a href="#" class="feature-link">Track Status →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📍</div>
+          <h3>Location-Based Reporting</h3>
+          <p>High-precision mobile GPS coordinates paired with localized street addresses ensure cleanup squads navigate straight to the pile.</p>
+          <span class="feature-link" style="pointer-events: none;">Precision ±3m GPS Lock</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3>Verified Resolution</h3>
+          <p>Full accountability through mandatory before-and-after photo verification uploaded by field crews before a ticket can be closed.</p>
+          <span class="feature-link" style="pointer-events: none;">Zero Fake Closures</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Smart Dashboard</h3>
+          <p>Aggregated ward metrics, recurring overflow patterns, heatmaps, and municipal resource optimization trends.</p>
+          <a href="#" class="feature-link">View Dashboard →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution & Process -->
+  <section class="section">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 1rem;">THE WORKFLOW</div>
+        <h2>Report → Verify → Assign → Resolve → Track</h2>
+      </div>
+
+      <div class="process-timeline">
+        <div class="process-step">
+          <div class="step-number">1</div>
+          <div class="step-title">Report</div>
+          <div class="step-description">A resident or patrol team captures an issue with GPS tag and photos.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-number">2</div>
+          <div class="step-title">Verify</div>
+          <div class="step-description">The system verifies location, filters duplicates, and flags urgency.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-number">3</div>
+          <div class="step-title">Assign</div>
+          <div class="step-description">Direct routing to the nearest active sanitation vehicle and crew.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-number">4</div>
+          <div class="step-title">Resolve</div>
+          <div class="step-description">On-ground staff clears the area and snaps photographic proof.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <h2 style="text-align: center; margin-bottom: 1rem;">Getting a problem solved shouldn't be complicated.</h2>
+
+      <div class="how-it-works">
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-number">01</div>
+            <h3>Spot it</h3>
+            <p>See an overflowing bin, illegal dump site, or blocked street drainage? Take a rapid photo and select the issue type with precision geolocation.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-step-number">02</div>
+            <h3>Route it</h3>
+            <p>EcoTrack ingests the report, verifies incident redundancy in the ward, and auto-dispatches an alert to the responsible zonal sanitation supervisor.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-step-number">03</div>
+            <h3>Resolve it</h3>
+            <p>The assigned field team moves in. Status moves from "Assigned" to "In Progress" with real-time operational notes.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-step-number">04</div>
+            <h3>Verify it</h3>
+            <p>Crews submit post-service photos before closing tickets. You receive confirmation with exact timestamps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waste Segregation Guide -->
+  <section class="section" id="waste-guide">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 1rem;">WASTE MANAGEMENT</div>
+        <h2>Proper segregation is the foundation of an efficient waste system.</h2>
+      </div>
+
+      <div class="waste-categories">
+        <div class="waste-card wet">
+          <div class="waste-category-badge">Wet / Organic</div>
+          <h3>Wet / Organic Waste</h3>
+          <p>Biodegradable materials that break down naturally into compost. Keep liquid contents drained before disposal.</p>
+          <ul class="waste-items">
+            <li>Food scraps & vegetable peels</li>
+            <li>Yard waste & grass clippings</li>
+            <li>Soiled paper & cardboard</li>
+            <li>Coconut shell & jute twine</li>
+          </ul>
+        </div>
+
+        <div class="waste-card dry">
+          <div class="waste-category-badge">Dry / Recyclable</div>
+          <h3>Dry / Recyclable Waste</h3>
+          <p>Clean, non-biodegradable items that can be remanufactured. Must be rinsed clean of grease and food oils.</p>
+          <ul class="waste-items">
+            <li>Paper, cardboard & magazines</li>
+            <li>Plastic bottles & containers</li>
+            <li>Glass & aluminum cans</li>
+            <li>Metal & tin foil</li>
+          </ul>
+        </div>
+
+        <div class="waste-card hazard">
+          <div class="waste-category-badge">Special / Hazardous</div>
+          <h3>Special & Hazardous</h3>
+          <p>Items posing chemical, biological, or electronic contamination. Never mix into standard residential dumpsters.</p>
+          <ul class="waste-items">
+            <li>Medical waste & needles</li>
+            <li>Chemical & pesticide containers</li>
+            <li>E-waste & batteries</li>
+            <li>Paint & oil cans</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Showcase -->
+  <section class="section">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2>Live Incident Dashboard</h2>
+      </div>
+
+      <div class="dashboard-showcase">
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Location</th>
+              <th>Issue Type</th>
+              <th>Status</th>
+              <th>Assigned Crew</th>
+              <th>ETA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#ECO-2847</td>
+              <td>Sector 5, Bandra</td>
+              <td>Overflowing Bin</td>
+              <td><span class="status-badge status-resolved">Resolved</span></td>
+              <td>Team Alpha</td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>#ECO-2846</td>
+              <td>Sector 12, Andheri</td>
+              <td>Illegal Dump</td>
+              <td><span class="status-badge status-assigned">In Progress</span></td>
+              <td>Team Beta</td>
+              <td>15 mins</td>
+            </tr>
+            <tr>
+              <td>#ECO-2845</td>
+              <td>Sector 8, Dadar</td>
+              <td>Blocked Drain</td>
+              <td><span class="status-badge status-assigned">Assigned</span></td>
+              <td>Team Gamma</td>
+              <td>32 mins</td>
+            </tr>
+            <tr>
+              <td>#ECO-2844</td>
+              <td>Sector 3, Fort</td>
+              <td>Mixed Waste</td>
+              <td><span class="status-badge status-pending">Pending</span></td>
+              <td>Unassigned</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Audience Dashboards -->
+  <section class="section">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2>Built for Three Essential Roles</h2>
+        <p>Each dashboard is purpose-built for citizens, field crews, and administrators.</p>
+      </div>
+
+      <div class="audience-grid">
+        <div class="audience-card">
+          <div class="audience-header">
+            <h3>👥 Citizen Dashboard</h3>
+            <p style="margin: 0; opacity: 0.9;">Report, track, and improve</p>
+          </div>
+          <div class="audience-body">
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Easy Reporting</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">No sign-up required, instant photo upload with location tagging</p>
+              </div>
+            </div>
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Real-time Tracking</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Follow your report from dispatch to verified closure</p>
+              </div>
+            </div>
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Waste Guide Access</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Learn proper segregation practices for any waste type</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-card">
+          <div class="audience-header">
+            <h3>🚛 Staff Dashboard</h3>
+            <p style="margin: 0; opacity: 0.9;">Manage field operations</p>
+          </div>
+          <div class="audience-body">
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Smart Dispatch</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Auto-routed assignments based on proximity and vehicle capacity</p>
+              </div>
+            </div>
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Photo Proof System</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Capture before-and-after evidence for accountability</p>
+              </div>
+            </div>
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Work History</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Track crew performance and identify process improvements</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="audience-card">
+          <div class="audience-header">
+            <h3>📊 Admin Dashboard</h3>
+            <p style="margin: 0; opacity: 0.9;">Govern city-wide performance</p>
+          </div>
+          <div class="audience-body">
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Hotspot Analytics</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Identify recurring sanitation issues and resource gaps</p>
+              </div>
+            </div>
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Performance Metrics</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Response times, resolution rates, and citizen satisfaction</p>
+              </div>
+            </div>
+            <div class="audience-feature">
+              <div class="audience-feature-icon">✓</div>
+              <div>
+                <strong>Resource Optimization</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Data-driven truck scheduling and crew allocation</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Report Section -->
+  <section class="section" id="report" style="background: var(--bg-secondary);">
+    <div class="container" style="max-width: 500px;">
+      <h2 style="text-align: center;">Report a Sanitation Issue</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Help improve your community by reporting waste, contamination, or sanitation problems in real-time.</p>
+
+      <form id="reportForm" style="background: var(--bg-primary); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+        <div id="successMessage" class="success-message" style="display: none;">
+          Report submitted successfully. Thanks for helping make your community cleaner!
+        </div>
+
+        <div id="errorMessage" style="color: var(--danger); padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: var(--radius-md); margin-bottom: 1.5rem; display: none;"></div>
+
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" id="name" class="form-input" placeholder="Your full name" required>
+          <div id="nameError" class="error-message"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+          <div id="emailError" class="error-message"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="tel" id="phone" class="form-input" placeholder="+91 9876 543210" required>
+          <div id="phoneError" class="error-message"></div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+          <span id="submitText">Submit Report</span>
+          <span id="loadingSpinner" class="loading" style="display: none;"></span>
+        </button>
+      </form>
+
+      <p style="text-align: center; color: var(--text-tertiary); font-size: 0.85rem; margin-top: 1.5rem;">
+        Your information is secure and will only be used to coordinate sanitation response.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>About EcoTrack</h4>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Transforming urban sanitation through civic technology and real-time coordination.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#report">Report an Issue</a></li>
+            <li><a href="#waste-guide">Waste Guide</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">Contact Support</a></li>
+            <li><a href="#">Status Page</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Organization</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 EcoTrack. Smarter waste. Cleaner communities.</p>
+        <p>Built for Smart India Hackathon 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Configuration
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYqZDPiwtOqu9lvFCOAwndhc_xivfJyohKKiNgfqDqAFtiosBoG6U4bieJuLohcHUV/exec";
+
+    // Form Elements
+    const form = document.getElementById('reportForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Validation Functions
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validatePhone(phone) {
+      return /^[\d\s\-+()]{10,}$/.test(phone.replace(/\s/g, ''));
+    }
+
+    function clearErrors() {
+      document.getElementById('nameError').textContent = '';
+      document.getElementById('emailError').textContent = '';
+      document.getElementById('phoneError').textContent = '';
+      errorMessage.style.display = 'none';
+      successMessage.style.display = 'none';
+
+      nameInput.classList.remove('error');
+      emailInput.classList.remove('error');
+      phoneInput.classList.remove('error');
+    }
+
+    // Form Submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErrors();
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const phone = phoneInput.value.trim();
+
+      let hasError = false;
+
+      // Validate Name
+      if (!name) {
+        document.getElementById('nameError').textContent = 'Name is required';
+        nameInput.classList.add('error');
+        hasError = true;
+      }
+
+      // Validate Email
+      if (!email) {
+        document.getElementById('emailError').textContent = 'Email is required';
+        emailInput.classList.add('error');
+        hasError = true;
+      } else if (!validateEmail(email)) {
+        document.getElementById('emailError').textContent = 'Please enter a valid email';
+        emailInput.classList.add('error');
+        hasError = true;
+      }
+
+      // Validate Phone
+      if (!phone) {
+        document.getElementById('phoneError').textContent = 'Phone is required';
+        phoneInput.classList.add('error');
+        hasError = true;
+      } else if (!validatePhone(phone)) {
+        document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
+        phoneInput.classList.add('error');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitText.style.display = 'none';
+      loadingSpinner.style.display = 'inline-block';
+
+      try {
+        // Build the URL with query parameters
+        const url = SCRIPT_URL + "?" + new URLSearchParams({
+          name: name,
+          email: email,
+          phone: phone
+        });
+
+        // Send the request with no-cors mode
+        await fetch(url, {
+          method: "GET",
+          mode: "no-cors"
+        });
+
+        // Assume success (since we can't read the response with no-cors)
+        successMessage.style.display = 'block';
+        form.reset();
+
+        // Scroll to success message
+        successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      } catch (error) {
+        errorMessage.textContent = 'An error occurred. Please try again.';
+        errorMessage.style.display = 'block';
+      } finally {
+        // Hide loading state
+        submitBtn.disabled = false;
+        submitText.style.display = 'inline';
+        loadingSpinner.style.display = 'none';
+      }
+    });
+
+    // Utility: Scroll to report section
+    function scrollToReport() {
+      const reportSection = document.getElementById('report');
+      reportSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
